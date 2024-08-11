@@ -16,8 +16,8 @@ Addition Of Harmonic Mean Of the Low (the Candle difference of previous day low 
 
 
 Such that when there is an uptrend :-
-📊 present day low becomes less lower and more higher usually
-📊 present day high becomes higher and more higher usually
+      *📊 present day low becomes less lower and more higher usually
+      *📊 present day high becomes higher and more higher usually
 
 *  ✔️ harmonic mean low experiences a little drop due to negative values inclusion due to prev_low - current_low but `prev_low < current low`
 *  ✔️ harmonic mean high experiences a rise due to positive values inclusion due to current high - prev_low as `current high > prev_high `
