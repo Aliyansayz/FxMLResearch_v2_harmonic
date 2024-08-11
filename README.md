@@ -19,7 +19,7 @@ Such that when there is an uptrend :-
 *  📊 present day low becomes higher and more higher usually
 *  📊 present day high becomes higher and more higher usually
 
-*  ✔️ harmonic mean low experiences a little drop due to negative values inclusion due to prev_low - current_low but `prev_low < current low` as previous low value was greater than current low value .
+*  ✔️ harmonic mean low experiences a little drop due to negative values inclusion due to prev_low - current_low `prev_low < current low` as previous low value was greater than current low value .
 *  
 *  ✔️ harmonic mean high experiences a rise due to positive values inclusion due to current high - prev_high as `current high > prev_high ` as current high value was greater than previous high value . 
 
@@ -29,9 +29,9 @@ Such that when there is an downtrend :-
 *  📊 present day low becomes lower and more lower usually
 *  📊 present day high becomes lower and more lower usually
 
-*  ✔️ harmonic mean low experiences a little rise due to positive values inclusion due to prev_low - current_low but `prev_low > current low` as previous low value was smaller than current low value .
+*  ✔️ harmonic mean low experiences a little rise due to positive values inclusion due to prev_low - current_low `prev_low > current low` as previous low value was smaller than current low value .
 *  
-*  ✔️ harmonic mean high experiences a little drop due to negative values inclusion due to current high - prev_high as `current high < prev_high ` as current high value was smaller than previous high value . 
+*  ✔️ harmonic mean high experiences a little drop due to negative values inclusion due to current high - prev_high `current high < prev_high ` as current high value was smaller than previous high value . 
 
 
 Addition Of Relative Strength Index Crossover
