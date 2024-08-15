@@ -197,29 +197,29 @@ test_model(symbol="EURGBP", iteration=14, learning_rate=0.18, depth=9, window_si
 
 # ______________________________________
 
-test_model(symbol="CADCHF", iteration=14, learning_rate=0.20, depth=7, window_size=7, alpha_type="omega") # version A passed
+test_model(symbol="CADCHF", iteration=14, learning_rate=0.20, depth=7, window_size=7, alpha_type="omega", save_model=True) # version A passed
 # test_model(symbol="CADCHF", iteration=15, learning_rate=0.18, depth=8, window_size=6, alpha_type="beta") # version close to A 
 # test_model(symbol="CADCHF", iteration=14, learning_rate=0.20, depth=7, window_size=7, alpha_type="beta") # version close to A
 
-test_model(symbol="AUDCHF", iteration=25, learning_rate=0.25, depth=7, window_size=11, alpha_type="delta") # version A passed 
+test_model(symbol="AUDCHF", iteration=25, learning_rate=0.25, depth=7, window_size=11, alpha_type="delta", save_model=True) # version A passed 
 # test_model(symbol="AUDCHF", iteration=22, learning_rate=0.25, depth=7, window_size=11, alpha_type="delta") # version close to A
 # test_model(symbol="AUDCHF", iteration=27, learning_rate=0.66, depth=8, window_size=6, alpha_type="alpha") # version close to A 
 
-test_model(symbol="GBPCHF", iteration=13, learning_rate=0.42, depth=7, window_size=5, alpha_type="beta") # version A passed
+test_model(symbol="GBPCHF", iteration=13, learning_rate=0.42, depth=7, window_size=5, alpha_type="beta", save_model=True) # version A passed
 # test_model(symbol="GBPCHF", iteration=13, learning_rate=0.49, depth=7, window_size=5, alpha_type="beta") # version close to A
 # test_model(symbol="GBPCHF", iteration=12, learning_rate=0.42, depth=7, window_size=5, alpha_type="beta") # version 
 
-test_model(symbol="EURCHF", iteration=20, learning_rate=0.18, depth=7, window_size=5, alpha_type="omega") # version A passed
+test_model(symbol="EURCHF", iteration=20, learning_rate=0.18, depth=7, window_size=5, alpha_type="omega", save_model=True) # version A passed
 # test_model(symbol="EURCHF", iteration=19, learning_rate=0.18, depth=7, window_size=5, alpha_type="omega") # version close to A
 # test_model(symbol="EURCHF", iteration=12, learning_rate=0.44, depth=7, window_size=5, alpha_type="beta") # version close to A
 
 
-test_model( symbol="CADJPY", iteration=7, learning_rate=0.38, depth=9, window_size=11, alpha_type="delta" ) # version A passed
+test_model( symbol="CADJPY", iteration=7, learning_rate=0.38, depth=9, window_size=11, alpha_type="delta", save_model=True) # version A passed
 # test_model( symbol="CADJPY", iteration=7, learning_rate=0.71, depth=12, window_size=6, alpha_type="beta" ) version close to A
 # test_model( symbol="CADJPY", iteration=47, learning_rate=0.47, depth=9, window_size=5, alpha_type="beta" ) # version A passed
 
 
-test_model( symbol="NZDCAD", iteration=7, learning_rate=0.68, depth=11, window_size=6, alpha_type="gamma" ) # version A passed
+test_model( symbol="NZDCAD", iteration=7, learning_rate=0.68, depth=11, window_size=6, alpha_type="gamma", save_model=True) # version A passed
 # test_model( symbol="NZDCAD", iteration=7, learning_rate=0.2, depth=12, window_size=9, alpha_type="omega" )
 # test_model( symbol="NZDCAD", iteration=7, learning_rate=0.2, depth=12, window_size=9, alpha_type="gamma" ) # version close to A
 # test_model( symbol="NZDCAD", iteration=6, learning_rate=0.35, depth=11, window_size=6, alpha_type="gamma" ) # version close to A
