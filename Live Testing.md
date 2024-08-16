@@ -22,9 +22,9 @@ Live Testing Code python :-
                   
                   
                   from twelvedata import TDClient
-                  
+                  api_key = "_"
                   # Initialize client - apikey parameter is requiered
-                  td = TDClient(apikey="7b703cf383494124b3370ad71a65f796")
+                  td = TDClient(apikey=api_key)
                   
                   # Construct the necessary time series
                   ts = td.time_series(
