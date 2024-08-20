@@ -7,7 +7,7 @@
 * Relative Strength Index, Simple Moving Average of RSI,
 * Candle Type 
 * Harmonic Mean on `Close Price` with small and large period values,
-* `High` difference of two days harmonic mean also for Low, difference for last 45 days
+* `High` difference of two days harmonic mean also for `Low`, difference for last 45 days
 * Hour 4 RSI,
 * Hour 4 Supertrend 5.5x Factor To Point High Swing In Price Visible in Daily Timeframe too
 * Hour 4 Candle Type
@@ -16,7 +16,7 @@
 
 
 
-Significance Of Harmonic Mean is data drift tackling within 45 days by Highs and Lows peaks made by prices change. 
+Significance Of Harmonic Mean is data drift tackling within 45 days by `Highs` and `Lows` peaks made by prices change. 
 
 Addition Of Harmonic Mean Of the Low (the Candle difference of previous day low price and present day low price) and also Harmonic Mean Difference Of High (the Candle difference of present day high price and previous day high price)
 
