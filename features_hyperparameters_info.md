@@ -30,6 +30,11 @@
         
     elif alpha_type == "lambda":
         substrings = ['relative_range', 'candle_type', 'heikin_ashi' ]
+
+
+
+
+Some unique indicators function : -
     
     def calculate_hm_high(series, period=45):
     
@@ -61,3 +66,27 @@
         y_pi = y * np.pi
         return y_pi
     return  series.rolling(window=period).apply(harmonic_mean_low, raw=True)
+
+
+    def calculate_hm_low(series, period=45):
+
+    def harmonic_mean_low(low):
+        n = len(low)
+        prev_low = np.roll(low, 1)    
+        diff = prev_low - low
+
+        hm = n / sum(1 / x for x in diff if x != 0)
+        y = np.sin(hm)
+
+        y_pi = y * np.pi
+        return y_pi
+    return  series.rolling(window=period).apply(harmonic_mean_low, raw=True)
+
+    
+
+    def calculate_harmonic_mean(series, period=3):
+    def harmonic_mean(s):
+        n = len(s)
+        return n / sum(1 / x for x in s if x != 0) if n > 0 else 0
+    
+    return series.rolling(window=period).apply(harmonic_mean, raw=True)
