@@ -1,3 +1,7 @@
+## Description
+Daily Close price change prediction of 28 Forex Pairs if negative then we sell a pair if positive we buy a pair we use previous variable number of days as features amd last 3 days hour-4 features to predict next day.
+
+
 # May
 
 ![May 2024 Daily Net Gains Using Regularized Hyperaparameters ](https://github.com/user-attachments/assets/aa358a2a-40d0-4e13-8352-450c9e06308a)
