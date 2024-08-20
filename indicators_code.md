@@ -8,30 +8,6 @@ def calculate_rsi(series, period=10):
     return 100 - (100 / (1 + rs))
 
 
-def ema( price, period):
-
-  price = np.array(price)
-  alpha = 2 / (period + 1.0)
-  alpha_reverse = 1 - alpha
-  data_length = len(price)
-
-  power_factors = alpha_reverse ** (np.arange(data_length + 1))
-  initial_offset = price[0] * power_factors[1:]
-
-  scale_factors = 1 / power_factors[:-1]
-
-  weight_factor = alpha * alpha_reverse ** (data_length - 1)
-
-  weighted_price_data = price * weight_factor * scale_factors
-  cumulative_sums = weighted_price_data.cumsum()
-  ema_values = initial_offset + cumulative_sums * scale_factors[::-1]
-
-  return ema_values
-    
-
-
-
-
 def candle_type(o, h, l, c):
 
     diff = abs(c - o)
@@ -103,56 +79,6 @@ def shift(array, place):
   shifted[np.isnan(shifted)] = np.nanmean(shifted)
 
   return shifted
-
-
-def ma_based_supertrend_indicator( high, low, close, atr_length=10, atr_multiplier=3, ma_length=10):
-
-    # Calculate True Range and Smoothed ATR
-    tr = true_range(high, low, close)
-    atr = ema(tr, atr_length)
-
-    upper_band = (high + low) / 2 + (atr_multiplier * atr)
-    lower_band = (high + low) / 2 - (atr_multiplier * atr)
-
-    trend = np.zeros(len(atr))
-
-    # Calculate Moving Average
-    ema_values = ema(close, ma_length)
-
-    if ema_values[0] > lower_band[0]:
-        trend[0] = lower_band[0]
-    elif ema_values[0] < upper_band[0]:
-        trend[0] = upper_band[0]
-    else:
-        trend[0] = upper_band[0]
-
-    # Compute final upper and lower bands
-    for i in range(1, len(close)):
-        if ema_values[i] > trend[i - 1]:
-            trend[i] = max(trend[i - 1], lower_band[i])
-
-
-        elif ema_values[i] < trend[i - 1]:
-            trend[i] = min(trend[i - 1], upper_band[i])
-
-        else:
-            trend[i] = trend[i - 1]
-
-    status_value = np.where(ema_values > trend, 1.0, -1.0)
-
-    return trend, status_value
-
-
-
-
-def supertrend_status_crossover( status_value):
-
-
-    prev_status = np.roll(status_value, 1)
-    supertrend_status_crossover = np.where((prev_status < 0) & (status_value > 0), 1.0, np.where((prev_status > 0) & (status_value < 0), -1.0, 0))
-
-    return supertrend_status_crossover
-
 
 
 
@@ -264,5 +190,84 @@ def direction_crossover_signal_line(signal, prev_signal):
         prev_direction = np.roll(direction, 1)
         crossover = np.where((prev_direction == -1) & (direction == 1), 1,
                              np.where((prev_direction == 1) & (direction == -1), -1, 0))
-
         return direction, crossover
+
+def supertrend_status_crossover( status_value):
+
+
+    prev_status = np.roll(status_value, 1)
+    supertrend_status_crossover = np.where((prev_status < 0) & (status_value > 0), 1.0, np.where((prev_status > 0) & (status_value < 0), -1.0, 0))
+
+    return supertrend_status_crossover
+
+Not used :- 
+                
+                def ema( price, period)
+                
+                  price = np.array(price)
+                  alpha = 2 / (period + 1.0)
+                  alpha_reverse = 1 - alpha
+                  data_length = len(price)
+                
+                  power_factors = alpha_reverse ** (np.arange(data_length + 1))
+                  initial_offset = price[0] * power_factors[1:]
+                
+                  scale_factors = 1 / power_factors[:-1]
+                
+                  weight_factor = alpha * alpha_reverse ** (data_length - 1)
+                
+                  weighted_price_data = price * weight_factor * scale_factors
+                  cumulative_sums = weighted_price_data.cumsum()
+                  ema_values = initial_offset + cumulative_sums * scale_factors[::-1]
+                
+                  return ema_values
+        
+
+                def ma_based_supertrend_indicator( high, low, close, atr_length=10, atr_multiplier=3, ma_length=10):
+                
+                    # Calculate True Range and Smoothed ATR
+                    tr = true_range(high, low, close)
+                    atr = ema(tr, atr_length)
+                
+                    upper_band = (high + low) / 2 + (atr_multiplier * atr)
+                    lower_band = (high + low) / 2 - (atr_multiplier * atr)
+                
+                    trend = np.zeros(len(atr))
+                
+                    # Calculate Moving Average
+                    ema_values = ema(close, ma_length)
+                
+                    if ema_values[0] > lower_band[0]:
+                        trend[0] = lower_band[0]
+                    elif ema_values[0] < upper_band[0]:
+                        trend[0] = upper_band[0]
+                    else:
+                        trend[0] = upper_band[0]
+                
+                    # Compute final upper and lower bands
+                    for i in range(1, len(close)):
+                        if ema_values[i] > trend[i - 1]:
+                            trend[i] = max(trend[i - 1], lower_band[i])
+                
+                
+                        elif ema_values[i] < trend[i - 1]:
+                            trend[i] = min(trend[i - 1], upper_band[i])
+                
+                        else:
+                            trend[i] = trend[i - 1]
+                
+                    status_value = np.where(ema_values > trend, 1.0, -1.0)
+                
+                    return trend, status_value
+
+
+
+
+
+
+
+
+
+
+
+        
