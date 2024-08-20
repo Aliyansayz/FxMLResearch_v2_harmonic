@@ -1,6 +1,6 @@
 # May
 
-      ![May 2024 Daily Net Gains Using Regularized Hyperaparameters ](https://github.com/user-attachments/assets/aa358a2a-40d0-4e13-8352-450c9e06308a)
+![May 2024 Daily Net Gains Using Regularized Hyperaparameters ](https://github.com/user-attachments/assets/aa358a2a-40d0-4e13-8352-450c9e06308a)
 
       {'2024-05-31': {'pips_profit': 420, 'pips_loss': 613, 'net_gain': -193}, '2024-05-30': 
       {'pips_profit': 923, 'pips_loss': 217, 'net_gain': 705}, 
