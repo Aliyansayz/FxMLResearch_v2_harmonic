@@ -112,7 +112,7 @@ Whole Code : -
               
                   # Main function to manage threading
                   def main():
-                      td = TDClient(apikey="7b703cf383494124b3370ad71a65f796")
+                      td = TDClient(apikey="")
                 
                     forex_pairs = [
                         'AUDCAD', 'AUDCHF', 'AUDJPY', 'AUDNZD', 'AUDUSD',
