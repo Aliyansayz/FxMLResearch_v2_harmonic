@@ -116,6 +116,71 @@ Whole Code : -
             if __name__ == "__main__":
                 main()
 
+# Initial Working With Important Info:-
+
+                    from datetime import datetime, timedelta
+                    
+                    # Get today's date
+                    today = datetime.today()
+                    
+                    # Get the date 75 days ago
+                    previous_date = today - timedelta(days=95)
+                    
+                    # Get the date 1 day ago
+                    yesterday = today - timedelta(days=1)
+                    # Format the date
+                    yesterday_str = yesterday.strftime('%Y-%m-%d')
+                    
+                    # Format the dates
+                    today_str = today.strftime('%Y-%m-%d')
+                    previous_date_str = previous_date.strftime('%Y-%m-%d')
+                    
+                    print("Today's Date:", today_str)
+                    print("75 Days Ago Date:", previous_date_str)
+                    
+                    
+                    from twelvedata import TDClient
+                    
+                    # Initialize client - apikey parameter is requiered
+                    td = TDClient(apikey="7b703cf383494124b3370ad71a65f796")
+                    tf = None
+                    tf = "1day" # "1day"
+                    
+                    if tf == "1day":
+                        outputsize = 95 # last 95 days
+                    elif tf == "4h":
+                        outputsize = 95 * 6 # 95 days length
+                    
+                    # Construct the necessary time series
+                    ts = td.time_series(
+                        symbol="EUR/USD, GBP/USD" ,
+                        interval=tf, #  "4h"
+                        start_date=f"{previous_date_str}",
+                        end_date= f"{today_str}",
+                        outputsize=outputsize # 450 # approximate length for
+                    )
+                    
+                    df = ts.as_pandas()
+                    print(ts.as_pandas())
+                    
+                    df.to_csv("eurusd_gbpusd_daily.csv") 
+  show us all OHLC from start date to yesterday only excluding today date when
+  `start_date=f"{previous_date_str}", end_date= f"{today_str}",` are used. Length is 69 index of Day 
+  20 May 2024 To 22 August 2024 excluding today's date 23 August
+                    
+                    print(len(df))
+                    
+                    df.to_csv("eurusd_hour_4.csv") 
+
+In 4 Hour Timeframe show us all OHLC from start date to yesterday only excluding today date when
+
+`start_date=f"{previous_date_str}", end_date= f"{today_str}",` are used. Length is 413 index of hour-4
+20 May 2024 To 22 August 2024 excluding today's date 23 August
+
+
+
+
+
 # Initial Working: - 
 
               from datetime import datetime, timedelta
