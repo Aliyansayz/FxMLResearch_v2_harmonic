@@ -178,6 +178,49 @@ In 4 Hour Timeframe show us all OHLC from start date to yesterday only excluding
 20 May 2024 To 22 August 2024 excluding today's date 23 August
 
 
+## Append Function To take new dataframe and dataframe file name and then append new records after previous records,
+
+            import pandas as pd
+
+            def append_new_data(csv_file_path, new_data_df):
+                """
+                Appends new data to the existing CSV file without overwriting existing records.
+            
+                Parameters:
+                csv_file_path (str): The path to the CSV file.
+                new_data_df (pd.DataFrame): The new data to append (must include a 'date' column).
+            
+                Returns:
+                None
+                """
+                # Step 1: Read the existing data from the CSV file
+                try:
+                    existing_df = pd.read_csv(csv_file_path, parse_dates=["date"])
+                except FileNotFoundError:
+                    existing_df = pd.DataFrame()  # Create an empty DataFrame if the file doesn't exist
+            
+                # Step 2: Ensure the date column in the new data is in datetime format
+                new_data_df['date'] = pd.to_datetime(new_data_df['date'])
+            
+                # Step 3: Filter out data from `new_data_df` that is already in `existing_df`
+                if not existing_df.empty:
+                    filtered_new_data = new_data_df[~new_data_df['date'].isin(existing_df['date'])]
+                else:
+                    filtered_new_data = new_data_df  # If the existing_df is empty, all data is new
+            
+                # Step 4: Append the new data to the existing data
+                combined_df = pd.concat([existing_df, filtered_new_data])
+            
+                # Step 5: Save the combined data back to the CSV file
+                combined_df.to_csv(csv_file_path, index=False)
+            
+                print(f"Data successfully appended to {csv_file_path}")
+            
+                # Example usage:
+                # Assuming `df` is the new data DataFrame with a 'date' column
+                # append_new_data("eurusd_daily.csv", df)
+
+
 
 
 
