@@ -3,6 +3,8 @@
 ## Indicators, ML Library and Scaling Method
 * Catboost Regressor Model
 * Sklearn Robust Scaler
+* Target Variable Price Change In Pips (forth decimal or second decimal place in JPY)
+* Rather than price prediction we predict how much price change will be caused by next day price, if negative we sell positive then buy 
 * Following features used (last 5 to 12 Days) (last 3 days Hour 4 features) :
 * Relative Strength Index, Simple Moving Average of RSI,
 * Candle Type 
