@@ -38,18 +38,18 @@ Such that when there is an uptrend :-
 *  📊 present day low becomes higher and more higher usually
 *  📊 present day high becomes higher and more higher usually
 
-*  ✔️ harmonic mean low experiences a little drop due to negative values inclusion due to prev_low - current_low `prev_low < current low` as current low value greater than previous low value causing negative difference we subtract `prev_low - current_low` small number from a larger number .
+*  ✔️ harmonic mean low experiences a little drop due to negative values inclusion as prev_low - current_low `prev_low < current low` as current low value greater than previous low value causing negative difference we subtract `prev_low - current_low` small number from a larger number .
   
-*  ✔️ harmonic mean high experiences a rise due to positive values inclusion due to current high - prev_high as `current high > prev_high ` as current high value greater than previous high value causing positive difference we subtract `current high - prev_high` large number from a smaller number .
+*  ✔️ harmonic mean high experiences a rise due to positive values inclusion as current high - prev_high as `current high > prev_high ` as current high value greater than previous high value causing positive difference we subtract `current high - prev_high` large number from a smaller number .
 
 
 Such that when there is an downtrend :-
 *  📊 present day low becomes lower and more lower usually
 *  📊 present day high becomes lower and more lower usually
 
-*  ✔️ harmonic mean low experiences a little rise due to positive values inclusion due to prev_low - current_low `prev_low > current low` as current low value smaller than previous low value causing positive difference we subtract large number `prev_low - current_low` from a smaller number .
+*  ✔️ harmonic mean low experiences a little rise due to positive values inclusion as prev_low - current_low `prev_low > current low` as current low value smaller than previous low value causing positive difference we subtract large number `prev_low - current_low` from a smaller number .
   
-*  ✔️ harmonic mean high experiences a little drop due to negative values inclusion due to current high - prev_high `current high < prev_high ` as current high value smaller than previous high value causing negative difference we subtract `current high - prev_high` small number from a larger number .
+*  ✔️ harmonic mean high experiences a little drop due to negative values inclusion as current high - prev_high `current high < prev_high ` as current high value smaller than previous high value causing negative difference we subtract `current high - prev_high` small number from a larger number .
 
 Addition Of Relative Strength Index Crossover:-
 
