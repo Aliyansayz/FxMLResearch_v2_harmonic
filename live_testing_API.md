@@ -153,7 +153,7 @@ Whole Code : -
                     
                     # Construct the necessary time series
                     ts = td.time_series(
-                        symbol="EUR/USD, GBP/USD" ,
+                        symbol="EUR/USD" ,   # , GBP/USD
                         interval=tf, #  "4h"
                         start_date=f"{previous_date_str}",
                         end_date= f"{today_str}",
@@ -163,7 +163,7 @@ Whole Code : -
                     df = ts.as_pandas()
                     print(ts.as_pandas())
                     
-                    df.to_csv("eurusd_gbpusd_daily.csv") 
+                    df.to_csv("eurusd_daily.csv") 
   show us all OHLC from start date to yesterday only excluding today date when
   `start_date=f"{previous_date_str}", end_date= f"{today_str}",` are used. Length is 69 index of Day 
   20 May 2024 To 22 August 2024 excluding today's date 23 August
