@@ -1,4 +1,4 @@
-class linear_regression_channel(stochastic_momentum_index):
+class linear_regression_channel :
 
     def slope_intercept_func(self, batch):
         return np.polyfit(np.arange(len(batch)), batch, 1)
