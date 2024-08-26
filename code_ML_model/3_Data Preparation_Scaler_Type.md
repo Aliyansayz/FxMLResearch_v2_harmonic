@@ -1,20 +1,20 @@
 
-import pandas as pd
-import numpy as np
-import pickle
-from sklearn.preprocessing import RobustScaler, LabelEncoder, StandardScaler
-from sklearn.model_selection import train_test_split
-# from sklearn.tree import DecisionTreeClassifier
-from sklearn.metrics import classification_report
-from catboost import CatBoostClassifier
-from catboost import Pool
-from catboost import CatBoostRegressor
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from sklearn.model_selection import GridSearchCV
-from sklearn.model_selection import train_test_split, RandomizedSearchCV
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import mean_squared_error
-from scipy.stats import randint
+        import pandas as pd
+        import numpy as np
+        import pickle
+        from sklearn.preprocessing import RobustScaler, LabelEncoder, StandardScaler
+        from sklearn.model_selection import train_test_split
+        # from sklearn.tree import DecisionTreeClassifier
+        from sklearn.metrics import classification_report
+        from catboost import CatBoostClassifier
+        from catboost import Pool
+        from catboost import CatBoostRegressor
+        from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+        from sklearn.model_selection import GridSearchCV
+        from sklearn.model_selection import train_test_split, RandomizedSearchCV
+        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.metrics import mean_squared_error
+        from scipy.stats import randint
 
 
         def get_features_transformed(symbol, day_data, hour4_data, date_resume = '2020-06-01', X_test_re = False, temporal=False, window_size = 9, alpha_type= "gamma"):
