@@ -375,12 +375,20 @@ class mlpipeline(access_resources):
 
 
         resource = cls()
-        resource.get_ohlc_1d_4h()
-        date = resource.get_date()
-
-        day_features, hour4_features = resource.load_features_files()
+        resource.get_ohlc_1d_4h() # Saving .csv files of 28 Fx Price datasets of 8 currencies
+        self.make_day_ohlc() # Perform mathematical opearations to add features and column values shifting by 14 index (day)
+        # merged all 28 datasets into a key based dictionary for each symbol
+        self.make_hour_4_ohlc() # Perform price values shifting by 3 index (day) after hour group by "1day" mathematical opearations to add features 
+        # merged all 28 datasets into a key based dictionary for each symbol   
+        date = resource.get_date() # get today's date 
+    
+        day_features, hour4_features = resource.load_features_files() # get day and hour4 features in date index, 
         fx_status_info = {}
-        for symbol in resource.forex_pairs:
+        for symbol in resource.forex_pairs: # Looping through each symbol and then getting 
+            # it's dataset and features of last 3-14 days to load it's model,
+            # each model file is a dictionary with : model file, and model info and it's hyperparameters and parameters:
+            # iterations, learning rate, depth of tree
+            # window size of last days feature, hour4_category(alpha, beta, delta, gamma)   
             pass
             day_data, hour4_data = resource.get_day_hour4_features(symbol, day_features, hour4_features)
 
