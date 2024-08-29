@@ -373,7 +373,7 @@ class mlpipeline(access_resources):
     @classmethod
     def return_fx_prediction_status(cls):
 
-
+        fx_pairs_currencies = { "AUD": "🇦🇺", "CAD": "🇨🇦", "NZD": "🇳🇿", "USD": "🇺🇸", "CHF": "🇨🇭", "EUR": "🇪🇺", "GBP": "🇬🇧", "JPY": "🇯🇵" }
         resource = cls()
         resource.get_ohlc_1d_4h() # Saving .csv files of 28 Fx Price datasets of 8 currencies
         self.make_day_ohlc() # Perform mathematical opearations to add features and column values shifting by 14 index (day)
