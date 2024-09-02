@@ -127,26 +127,46 @@ def test_model(symbol, iteration, learning_rate, depth, window_size=9, alpha_typ
 
 
 
-def evaluate_model_return_gains_accuracy(symbol, model, X_test_scaled, y_test, month_key= None, last_month = None, X_test = None ):
-
+def evaluate_model_return_gains_accuracy(symbol, model, X_test_scaled, y_test, month_keys= None, last_months = None, X_test = None ):
+      
+      """
+      When Using Month Keys
+      Assuming that our symbol-pair dataset is not more than last 11 months or
+      No two months with different year like, May 2024 in dataset but we cannot allow May 2023 
+      
+      """
+      
+  
       month_store = { 1: 'January', 2:'February', 3: 'March', 4: 'April', 5: 'May', 6: 'June', 
                      7: 'July', 8: 'August', 9: 'September', 10: 'October', 11: 'November', 12: 'December' }
+      month_indexes = {}
+      
       last_month = 1 # 2 3 4 
-      month_key  = [1,4,5]
+      month_keys  = [1,4,5]
 
       dataset_info = {}
       date   = X_test.index.values[-1] # latest date to get latest month
       date = str(date.astype('datetime64[D]'))
-      month = int(date.split('-')[1])
-      
+      latest_month = int(date.split('-')[1])
+
+      if month_keys != None :  #  then checks for 
+        pass
+        date_string = '2024-05-27'
+        month = date_string.split('-')[1]
+        latest_month = max(month_key)
+        if max(month_keys)
+      else :  last_month_mode = True
+        
+      if latest_month in month_key
   
       date_string = '2024-05-27'
       month = date_string.split('-')[1]
       latest_month = max(month_key)
+      last_months = 3
+      break_month = last_months + 1
   
-      sample = 0
-      right  = 0
-      wrong  = 0
+  
+      sample, right, wrong = 0, 0, 0
       status = []
       pips_profit = 0
       pips_loss = 0
@@ -185,18 +205,29 @@ def evaluate_model_return_gains_accuracy(symbol, model, X_test_scaled, y_test, m
   
   
       net_gains_list = []
-      for point in range(start, end  ): # may 1 - 22 # april 23 - 45
+      for point in range(1, len(X_test_scaled) + 1 ): #
   
           sample += 1
-          y_pred = model.predict(X_test_scaled[-point])
-          y_true = y_test[-point]
+          # y_pred = model.predict(X_test_scaled[-point])
+          # y_true = y_test[-point]
+          date   = str(X_test.index.values[-end].astype('datetime64[D]'))
+          month_num   = int(date.split('-')[1])
+          if break_month == month_num and last_month_mode : break
+          else :
+            if month_num not in month_indexes:  month_indexes[month_num] = { "index": [point] }
+            else : month_indexes[month_num]["index"].append(point)
+            
+      # to be continued...
+        
+          month_indexes[]
   
           if y_pred < 0.0 and y_true < 0.0 :
               pips_profit += abs(y_true)
               right += 1
               net_gains_list.append(abs(y_true))
               status.append(-1)
-  
+
+        
           elif y_pred > 0.0 and y_true > 0.0 :
               pips_profit += abs(y_true)
               right += 1
