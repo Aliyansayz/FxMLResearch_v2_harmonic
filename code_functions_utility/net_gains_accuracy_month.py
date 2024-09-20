@@ -158,14 +158,21 @@ def evaluate_model_return_gains_accuracy(symbol, model, X_test_scaled, y_test, m
       else :  last_month_mode = True
         
       if latest_month in month_key
-  
+      
       date_string = '2024-05-27'
       month = date_string.split('-')[1]
       latest_month = max(month_key)
-      last_months = 3
-      break_month = last_months + 1
-  
-  
+      last_months  = 3
+      break_month  = last_months + 1
+      date_series  = X_test.index.values
+
+      for index  in range(len(X_test)): 
+            index += 1 
+            month = date_series[-index].split('-')[1]
+            if month == break_month: break
+            else: 
+
+
       sample, right, wrong = 0, 0, 0
       status = []
       pips_profit = 0
@@ -213,7 +220,8 @@ def evaluate_model_return_gains_accuracy(symbol, model, X_test_scaled, y_test, m
           date   = str(X_test.index.values[-end].astype('datetime64[D]'))
           month_num   = int(date.split('-')[1])
           if break_month == month_num and last_month_mode : break
-          else :
+          else : 
+
             if month_num not in month_indexes:  month_indexes[month_num] = { "index": [point] }
             else : month_indexes[month_num]["index"].append(point)
             
