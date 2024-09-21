@@ -4,7 +4,8 @@ from twelvedata import TDClient
 from features_engineering import return_df_day, return_h4_df
 from features_engineering import add_features_day, make_features_lagged_day
 from features_engineering import combine_ohlc_into_single_day_hour_4, add_ohlc_in_lagged_hour_4, add_features_hour_4
-
+import os
+import pandas as pd
 
 
 
@@ -176,6 +177,7 @@ class ohlc_models (ohlc_transformations) :
 
     def load_features_files(self):
 
+
         day_features_path = 'day_features_data_lagby_14_v2.bin'
 
         with open(day_features_path, 'rb') as file:
@@ -217,11 +219,19 @@ class ohlc_models (ohlc_transformations) :
 class twelve_data_ohlc( ohlc_models ) :
     forex_pairs = [
         'AUDCAD', 'AUDCHF', 'AUDJPY', 'AUDNZD', 'AUDUSD',
-        'CADCHF', 'CADJPY','CHFJPY','EURAUD', 'EURCAD',
-        'EURCHF', 'EURGBP','EURJPY', 'EURNZD', 'EURUSD',
-        'GBPAUD', 'GBPCAD', 'GBPCHF','GBPJPY', 'GBPUSD', 'GBPNZD',
-        'NZDCAD', 'NZDCHF', 'NZDJPY', 'NZDUSD',
-        'USDCHF', 'USDCAD', 'USDJPY'
+        'CADCHF', 'CADJPY','CHFJPY', # wait
+
+
+        # 'EURAUD', 'EURCAD',
+        # 'EURCHF', 'EURGBP','EURJPY', 'EURNZD', 'EURUSD',
+        # 'GBPAUD', # wait
+        #
+        # 'GBPCAD', 'GBPCHF','GBPJPY', 'GBPUSD', 'GBPNZD',
+        # 'NZDCAD', 'NZDCHF', 'NZDJPY', # wait
+        #
+        #
+        # 'NZDUSD',
+        # 'USDCHF', 'USDCAD', 'USDJPY'
     ]
     batch_size = 8
 
@@ -229,6 +239,7 @@ class twelve_data_ohlc( ohlc_models ) :
     def get_ohlc_1d_4h(self):
 
         self.save_ohlc(tf="1day")
+
         self.save_ohlc(tf="4h")
 
 
@@ -261,7 +272,8 @@ class twelve_data_ohlc( ohlc_models ) :
         print(f"Processing {symbol}...")
         if tf == None: tf = "4h"
 
-        symbol_ = symbol[:3] + "/" + symbol[:-3]
+        symbol_ = symbol[:3] + "/" + symbol[3:]
+        print(symbol_)
         ts = td.time_series(
             symbol=symbol_,  # "EUR/USD", # symbol_
             interval=tf,  # "4h", # tf
@@ -282,6 +294,7 @@ class twelve_data_ohlc( ohlc_models ) :
 
         elif tf == "4h": filename = f"{symbol}_H4.csv"
 
+
         file_path = os.path.join(folder_path, filename)
 
         self.append_new_data( csv_file_path= file_path, new_data_df= df)
@@ -292,10 +305,41 @@ class twelve_data_ohlc( ohlc_models ) :
         time.sleep(0.5)
         print(f"Completed processing {symbol}")
 
+
+    def append_new_data(self, csv_file_path, new_data_df):
+
+        # new_data_df['datetime'] = pd.to_datetime(new_data_df['datetime'])
+
+        # Step 1: Read the existing data from the CSV file
+        try:
+            existing_df = pd.read_csv(csv_file_path, parse_dates=["datetime"])
+            if not existing_df.empty:
+                filtered_new_data = new_data_df[~new_data_df['datetime'].isin(existing_df['datetime'])]
+
+        except FileNotFoundError:
+            existing_df = pd.DataFrame()  # Create an empty DataFrame if the file doesn't exist
+            filtered_new_data = new_data_df
+            filtered_new_data.to_csv(csv_file_path)
+
+            print(f"Data successfully appended to {csv_file_path}")
+            # Step 2: Ensure the date column in the new data is in datetime format
+
+
+         # Step 3: Filter out data from `new_data_df` that is already in `existing_df`
+
+        # Step 4: Append the new data to the existing data
+        combined_df = pd.concat([existing_df, filtered_new_data])
+
+        # Step 5: Save the combined data back to the CSV file
+        combined_df.to_csv(csv_file_path)
+
+        print(f"Data successfully appended to {csv_file_path}")
+
+
     # Main function to manage threading
     def save_ohlc(self, tf="1day", daylength=95):
 
-        td = TDClient(apikey="") # twelve data api
+        td = TDClient(apikey="")
         start_date, end_date = self.get_start_end_date()
 
         # daylength = 95
@@ -310,41 +354,16 @@ class twelve_data_ohlc( ohlc_models ) :
         for i in range(0, len(self.forex_pairs), batch_size):
 
             for symbol in self.forex_pairs[i:i + batch_size]:
-                process_forex_pair(symbol, tf, start_date, end_date, output_size, td)
+                self.process_forex_pair(symbol, tf, start_date, end_date, output_size, td)
 
             # Wait for 60 seconds before moving on to the next batch
             print("Waiting for 60 seconds before processing the next batch...")
             time.sleep(60)
 
 
-    def append_new_data(self, csv_file_path, new_data_df):
-
-        # Step 1: Read the existing data from the CSV file
-        try:
-            existing_df = pd.read_csv(csv_file_path, parse_dates=["datetime"])
-        except FileNotFoundError:
-            existing_df = pd.DataFrame()  # Create an empty DataFrame if the file doesn't exist
-
-        # Step 2: Ensure the date column in the new data is in datetime format
-        new_data_df['datetime'] = pd.to_datetime(new_data_df['datetime'])
-
-         # Step 3: Filter out data from `new_data_df` that is already in `existing_df`
-        if not existing_df.empty:
-            filtered_new_data = new_data_df[~new_data_df['datetime'].isin(existing_df['datetime'])]
-        else:
-            filtered_new_data = new_data_df  # If the existing_df is empty, all data is new
-
-        # Step 4: Append the new data to the existing data
-        combined_df = pd.concat([existing_df, filtered_new_data])
-
-        # Step 5: Save the combined data back to the CSV file
-        combined_df.to_csv(csv_file_path)
-
-        print(f"Data successfully appended to {csv_file_path}")
-
     # def save_hour_4_ohlc(self):
     #
-    #     td = TDClient(apikey="")  # twelve data api
+    #     td = TDClient(apikey="7b703cf383494124b3370ad71a65f796")
     #     start_date, end_date = self.get_start_end_date()
     #
     #     daylength = 95
@@ -373,22 +392,17 @@ class mlpipeline(access_resources):
     @classmethod
     def return_fx_prediction_status(cls):
 
-        fx_pairs_currencies = { "AUD": "🇦🇺", "CAD": "🇨🇦", "NZD": "🇳🇿", "USD": "🇺🇸", "CHF": "🇨🇭", "EUR": "🇪🇺", "GBP": "🇬🇧", "JPY": "🇯🇵" }
+
         resource = cls()
-        resource.get_ohlc_1d_4h() # Saving .csv files of 28 Fx Price datasets of 8 currencies
-        self.make_day_ohlc() # Perform mathematical opearations to add features and column values shifting by 14 index (day)
-        # merged all 28 datasets into a key based dictionary for each symbol
-        self.make_hour_4_ohlc() # Perform price values shifting by 3 index (day) after hour group by "1day" mathematical opearations to add features 
-        # merged all 28 datasets into a key based dictionary for each symbol   
-        date = resource.get_date() # get today's date 
-    
-        day_features, hour4_features = resource.load_features_files() # get day and hour4 features in date index, 
+        # resource.get_ohlc_1d_4h()
+
+        # resource.save_ohlc(tf="1day")
+        resource.save_ohlc(tf="4h")
+        date = resource.get_date()
+
+        day_features, hour4_features = resource.load_features_files()
         fx_status_info = {}
-        for symbol in resource.forex_pairs: # Looping through each symbol and then getting 
-            # it's dataset and features of last 3-14 days to load it's model,
-            # each model file is a dictionary with : model file, and model info and it's hyperparameters and parameters:
-            # iterations, learning rate, depth of tree
-            # window size of last days feature, hour4_category(alpha, beta, delta, gamma)   
+        for symbol in resource.forex_pairs:
             pass
             day_data, hour4_data = resource.get_day_hour4_features(symbol, day_features, hour4_features)
 
@@ -396,3 +410,6 @@ class mlpipeline(access_resources):
             fx_status_info = resource.fx_status_function(fx_status_info, date, status, symbol)
 
         pass
+
+
+mlpipeline.return_fx_prediction_status()
