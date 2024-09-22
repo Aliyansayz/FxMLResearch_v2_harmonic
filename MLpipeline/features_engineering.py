@@ -1,3 +1,24 @@
+import pandas as pd
+# !pip install numpy==1.26.4
+
+import numpy as np
+import pickle
+from sklearn.preprocessing import RobustScaler, LabelEncoder, StandardScaler
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import classification_report
+
+# pip install catboost==1.2.5
+# from catboost import CatBoostClassifier
+from catboost import Pool
+from catboost import CatBoostRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import train_test_split, RandomizedSearchCV
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+from scipy.stats import randint
+
+
 
 def get_features_transformed(symbol, day_data, hour4_data, window_size = 9, alpha_type= "gamma"):
 
@@ -411,7 +432,7 @@ def return_df_day(daily_path):
 
     # data = pd.read_csv(daily_path, sep='\t')
 
-    df = pd.read_csv(daily_path, sep='\t')
+    df = pd.read_csv(daily_path)
     # Rename columns as requested
     df.rename(columns={
         'open': 'Open',
@@ -420,10 +441,12 @@ def return_df_day(daily_path):
         'close': 'Close',
     }, inplace=True)
 
-    df['datetime'] = pd.to_datetime(df['datetime'], format='%Y.%m.%d')
-
-    # Set Date column as the index
+    datetime_series = pd.to_datetime(df ['datetime']) # , format='%Y.%m.%d'
+    df['datetime'] = datetime_series
+    #
+    # # Set Date column as the index
     df.set_index('datetime', inplace=True)
+
 
     df = df[['Open', 'High', 'Low', 'Close']]
 
@@ -470,18 +493,19 @@ def add_ohlc_in_lagged_hour_4(reshaped_h4, lag_by=3):
 
 def return_h4_df(hour4_path):
     # data_h4 = pd.read_csv(hour4_path, sep='\t')
-    df = pd.read_csv(hour4_path, sep='\t')
+    df = pd.read_csv(hour4_path)
     # Rename columns as requested
-    df.rename(columns={
+    df.rename( columns={
         'open': 'Open_h4',
         'high': 'High_h4',
         'low': 'Low_h4',
-        'close': 'Close_h4',
-    }, inplace=True)
+        'close': 'Close_h4' }, inplace=True )
 
-    df['datetime'] = pd.to_datetime(df['datetime'], format='%Y.%m.%d')
 
-    # Set Date column as the index
+    datetime_series = pd.to_datetime(df['datetime'])
+    df['datetime']  = datetime_series
+    #
+    # # Set Date column as the index
     df.set_index('datetime', inplace=True)
 
     df = df[['Open_h4', 'High_h4', 'Low_h4', 'Close_h4']]
@@ -569,3 +593,70 @@ def add_features_hour_4(features_h4, lag_by=3):
 
     return features_h4
 
+#
+# def make_hour4_binary_file():
+#     forex_pairs = ['AUDCAD', 'AUDCHF', 'AUDJPY', 'AUDNZD', 'AUDUSD',
+#                    'CADCHF', 'CADJPY',
+#                    'CHFJPY',
+#                    'EURAUD', 'EURCAD', 'EURCHF', 'EURGBP',
+#                    'EURJPY', 'EURNZD', 'EURUSD',
+#                    'GBPAUD', 'GBPCAD', 'GBPCHF',
+#                    'GBPJPY', 'GBPUSD', 'GBPNZD',
+#                    'NZDCAD', 'NZDCHF', 'NZDJPY', 'NZDUSD',
+#                    'USDCHF', 'USDCAD', 'USDJPY']
+#
+#     currency_ohlc = []
+#     count = 0
+#     for pair in forex_pairs:
+#         # daily_path = f'currency_data/{pair[:6]}_Daily.csv'
+#         hour4_path = f'currency_data/{pair}_H4.csv'
+#
+#         data_h4 = rename_h4_df(hour4_path)
+#
+#         reshaped_h4 = combine_ohlc_into_single_day(data_h4)
+#
+#         features_h4 = add_ohlc_in_lagged(reshaped_h4, lag_by=3)
+#
+#         features_h4 = add_features_hour_4(features_h4, lag_by=3)
+#
+#         currency_df = {"hour4_features": features_h4, "symbol": f"{pair}"}
+#
+#         currency_ohlc.append(currency_df)
+#
+#     import pickle
+#
+#     with open('hour4_features_data_lag_by_3.bin', 'wb') as file:
+#         pickle.dump(currency_ohlc, file)
+#
+#
+# def make_daily_binary_file():
+#     forex_pairs = [
+#         'AUDCAD', 'AUDCHF', 'AUDJPY', 'AUDNZD', 'AUDUSD',
+#         'CADCHF', 'CADJPY',
+#         'CHFJPY',
+#         'EURAUD', 'EURCAD', 'EURCHF', 'EURGBP',
+#         'EURJPY', 'EURNZD', 'EURUSD',
+#         'GBPAUD', 'GBPCAD', 'GBPCHF',
+#         'GBPJPY', 'GBPUSD', 'GBPNZD',
+#         'NZDCAD', 'NZDCHF', 'NZDJPY', 'NZDUSD',
+#         'USDCHF', 'USDCAD', 'USDJPY'
+#     ]
+#
+#     currency_ohlc = []
+#     count = 0
+#     for pair in forex_pairs:
+#         daily_path = f'currency_data/{pair}_Daily.csv'
+#         data = return_df_day(daily_path)
+#         data = add_features_day(data)
+#         data = make_features_lagged_day(lag_by=14)
+#
+#         currency_df = {"day_features": data, "symbol": f"{pair}"}
+#         currency_ohlc.append(currency_df)
+#         count += 1
+#         print(count)
+#
+#
+#     import pickle
+#
+#     with open('day_features_data_lagby_14.bin', 'wb') as file:
+#         pickle.dump(currency_ohlc, file)
