@@ -1,5 +1,6 @@
 https://chatgpt.com/share/66f54f52-6858-8010-87be-ac3f533427a4
 
+https://www.mql5.com/en/docs/dateandtime/timecurrent
 
 #include <stdlib.mqh>
 #include <stdlib\json.mqh>  // Include the JSON library to parse the file
