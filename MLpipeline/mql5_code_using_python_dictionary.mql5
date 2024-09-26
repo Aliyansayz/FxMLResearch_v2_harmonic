@@ -9,6 +9,7 @@ https://www.mql5.com/en/docs/dateandtime/timecurrent
 input string filePath = "C:\\marketframe_ml\\trade_invoke.py";  // Path to the file
 datetime tradeStartTime;
 CTrade trade;
+bool trade_executed = false;  // Trade execution flag
 
 // Function to read the file content
 string ReadFile(string path) {
@@ -55,7 +56,22 @@ void CloseAllTrades() {
    }
 }
 
-// Main function to monitor time and close trades
+// Function to check if the date in the JSON matches today's date
+bool IsTodayMatching(string jsonDate) {
+   MqlDateTime tm = {};
+   datetime currentTime = TimeCurrent(tm);
+   
+   string currentDateString = StringFormat("%u-%02u-%02u", tm.year, tm.mon, tm.day);
+   PrintFormat("Current Date: %s | JSON Date: %s", currentDateString, jsonDate);
+
+   // Compare the formatted date
+   if (currentDateString == jsonDate) {
+      return true;
+   }
+   return false;
+}
+
+// Function to monitor time and close trades after the specified duration
 void ManageTradesTimeCheck() {
    datetime currentTime = TimeCurrent();
    
@@ -82,26 +98,34 @@ void OnStart() {
       return;
    }
    
-   // Get the symbol-action dictionary
+   // Get the date and symbol-action dictionary from the JSON
    MqlJsonObject jsonObj;
    root.ToObject(jsonObj);
    
-   // Extract symbol-action pairs
-   MqlJsonObject symbolDict;
-   if (jsonObj["symbol"].ToObject(symbolDict)) {
-      for (int i = 0; i < symbolDict.Total(); i++) {
-         string symbol = symbolDict.GetKey(i);
-         MqlJsonObject actionObj;
+   // Get the date from the JSON file
+   string jsonDate = jsonObj["date"].ToString();
+   
+   // Check if today's date matches the date in the JSON and no trades are currently open
+   if (!trade_executed && IsTodayMatching(jsonDate)) {
+      MqlJsonObject symbolDict;
+      if (jsonObj["symbol"].ToObject(symbolDict)) {
+         for (int i = 0; i < symbolDict.Total(); i++) {
+            string symbol = symbolDict.GetKey(i);
+            MqlJsonObject actionObj;
          
-         if (symbolDict[symbol].ToObject(actionObj)) {
-            string action = actionObj["action"].ToString();
-            ExecuteTrade(symbol, action);
+            if (symbolDict[symbol].ToObject(actionObj)) {
+               string action = actionObj["action"].ToString();
+               ExecuteTrade(symbol, action);
+            }
          }
       }
+      
+      // Record the time when trades are executed
+      tradeStartTime = TimeCurrent();
+      trade_executed = true;  // Set the flag to true after executing trades
+   } else {
+      Print("Trade already executed or today's date doesn't match the JSON date.");
    }
-   
-   // Record the time when trades are executed
-   tradeStartTime = TimeCurrent();
    
    // Set a timer for the time check
    EventSetTimer(60);  // Set a timer to check every 60 seconds
@@ -114,5 +138,5 @@ void OnTimer() {
 
 // Clean up resources when the script is stopped
 void OnDeinit(const int reason) {
-   EventKillTimer();  // Remove the timer when script stops
+   EventKillTimer();  // Remove the timer when the script stops
 }
