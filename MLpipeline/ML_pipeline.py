@@ -422,3 +422,18 @@ class mlpipeline(access_resources):
 
 
 mlpipeline.return_fx_prediction_status()
+
+"""
+output prediction status on 23 September 
+
+{"date": "2024-09-23", "symbol": {"AUDCAD": {"action": "sell"}, "AUDCHF": {"action": "sell"},
+"AUDJPY": {"action": "buy"}, "AUDNZD": {"action": "buy"}, "AUDUSD": {"action": "sell"},
+"CADCHF": {"action": "sell"}, "CADJPY": {"action": "buy"}, "CHFJPY": {"action": "sell"},
+"EURAUD": {"action": "buy"}, "EURCAD": {"action": "sell"}, "EURCHF": {"action": "sell"},
+"EURGBP": {"action": "sell"}, "EURJPY": {"action": "buy"}, "EURNZD": {"action": "buy"},
+"EURUSD": {"action": "sell"}, "GBPAUD": {"action": "sell"}, "GBPCAD": {"action": "buy"},
+"GBPCHF": {"action": "sell"}, "GBPJPY": {"action": "sell"}, "GBPUSD": {"action": "sell"},
+"GBPNZD": {"action": "buy"}, "NZDCAD": {"action": "buy"}, "NZDCHF": {"action": "sell"},
+"NZDJPY": {"action": "buy"}, "NZDUSD": {"action": "sell"}, "USDCHF": {"action": "buy"},
+"USDCAD": {"action": "buy"}, "USDJPY": {"action": "sell"}}}
+"""
