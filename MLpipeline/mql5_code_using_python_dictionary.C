@@ -44,7 +44,19 @@ void ExecuteTrade(string symbol, string action) {
    }
 }
 
-// Function to close all trades after the specified duration
+// Function to close all trades at 20:00 GMT
+void CloseAllTradesAtGMT() {
+   MqlDateTime gmt_tm = {};
+   datetime gmt_time = TimeGMT(gmt_tm);  // Get the current GMT time
+   
+   // Check if the GMT time is 20:00 or later
+   if (gmt_tm.hour >= 20) {
+      PrintFormat("Closing trades at or after 20:00 GMT. Current GMT Time: %02u:%02u", gmt_tm.hour, gmt_tm.min);
+      CloseAllTrades();
+   }
+}
+
+// Function to close all trades
 void CloseAllTrades() {
    for (int i = OrdersTotal() - 1; i >= 0; i--) {
       if (OrderSelect(i, SELECT_BY_POS)) {
@@ -56,29 +68,19 @@ void CloseAllTrades() {
    }
 }
 
-// Function to check if the date in the JSON matches today's date
-bool IsTodayMatching(string jsonDate) {
-   MqlDateTime tm = {};
-   datetime currentTime = TimeCurrent(tm);
+// Function to check if the date in the JSON matches today's date (in GMT)
+bool IsTodayMatchingGMT(string jsonDate) {
+   MqlDateTime gmt_tm = {};
+   datetime gmt_time = TimeGMT(gmt_tm);  // Get current GMT time
    
-   string currentDateString = StringFormat("%u-%02u-%02u", tm.year, tm.mon, tm.day);
-   PrintFormat("Current Date: %s | JSON Date: %s", currentDateString, jsonDate);
+   string currentGMTDateString = StringFormat("%u-%02u-%02u", gmt_tm.year, gmt_tm.mon, gmt_tm.day);
+   PrintFormat("Current GMT Date: %s | JSON Date: %s", currentGMTDateString, jsonDate);
 
-   // Compare the formatted date
-   if (currentDateString == jsonDate) {
+   // Compare the formatted GMT date
+   if (currentGMTDateString == jsonDate) {
       return true;
    }
    return false;
-}
-
-// Function to monitor time and close trades after the specified duration
-void ManageTradesTimeCheck() {
-   datetime currentTime = TimeCurrent();
-   
-   if (currentTime - tradeStartTime > 17 * 3600 + 30 * 60) {  // 17 hours and 30 minutes in seconds
-      Print("Closing trades after 17 hours and 30 minutes.");
-      CloseAllTrades();
-   }
 }
 
 // The main entry point of the script
@@ -105,8 +107,8 @@ void OnStart() {
    // Get the date from the JSON file
    string jsonDate = jsonObj["date"].ToString();
    
-   // Check if today's date matches the date in the JSON and no trades are currently open
-   if (!trade_executed && IsTodayMatching(jsonDate)) {
+   // Check if today's GMT date matches the date in the JSON and no trades are currently open
+   if (!trade_executed && IsTodayMatchingGMT(jsonDate)) {
       MqlJsonObject symbolDict;
       if (jsonObj["symbol"].ToObject(symbolDict)) {
          for (int i = 0; i < symbolDict.Total(); i++) {
@@ -133,7 +135,8 @@ void OnStart() {
 
 // Function that gets called at timer intervals
 void OnTimer() {
-   ManageTradesTimeCheck();  // Call the time-checking function
+   // Check if it's 20:00 GMT and close trades
+   CloseAllTradesAtGMT();
 }
 
 // Clean up resources when the script is stopped
