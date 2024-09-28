@@ -14,3 +14,9 @@ python ML_pipeline.py
 
 
 ```
+
+
+```
+place trade_info.txt file inside C: drive Marketframe_ml/ trade_info.txt
+
+```
