@@ -8,7 +8,9 @@ logs (required later not now)
 
 ```python
 
+pip install requirements.txt
 
+python ML_pipeline.py
 
 
 ```
