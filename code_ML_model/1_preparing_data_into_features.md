@@ -171,7 +171,7 @@ Hour 4 OHLC Into Features :-
           
           
           def combine_ohlc_into_single_day(data_h4):
-              grouped = data_h4.groupby(data_h4.index.date)
+              grouped = data_h4.groupby(data_h4.index.date) # Group By Single day or 24 hours 
           
               # Create a new dataframe to store the result
               reshaped_h4 = pd.DataFrame()
