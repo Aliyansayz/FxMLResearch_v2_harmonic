@@ -53,25 +53,27 @@ def get_features_transformed(symbol, day_data, hour4_data, window_size = 9, alph
     elif alpha_type == "ha":
         substrings = ['stdev_slow', 'heikin_ashi', 'slow_harmonic_mean']  # 'slow_harmonic_mean'
 
+    elif alpha_type == "gamma_metals_fix":
+        substrings = ['supertrend_h4', 'rsi_crossover_slow', 'candle_type']
+        features = [f'candle_type_T-{i}' for i in range(1, window_size + 1)] + \
+                   [f'rsi_T-{i}' for i in range(1, window_size + 1)] + \
+                   [f'rsi_crossover_fast_T-{i}' for i in range(1, window_size + 1)] + \
+                   [f'fast_harmonic_mean_T-{i}' for i in range(1, 0 + 1)]
+
     elif alpha_type == "gamma_indices":
-        substrings = [ 'supertrend_h4', 'rsi_crossover_slow', 'slow_harmonic_mean'  ]
-        features =  [f'candle_type_T-{i}' for i in range(1, window_size + 1) ] +\
-               [f'rsi_T-{i}' for i in range(1, window_size + 1) ] +\
-               [f'Price_Range_T-{i}' for i in range(1, window_size + 1)  ] +\
-               [f'rsi_crossover_slow_T-{i}' for i in range(1, window_size + 1) ] +\
-               [f'rsi_crossover_fast_T-{i}' for i in range(1, window_size + 1) ] +\
-               [f'fast_harmonic_mean_T-{i}' for i in range(1, window_size + 1) ] 
-    
-    
+        substrings = ['supertrend_h4', 'rsi_crossover_slow', 'slow_harmonic_mean']
+        features = [f'candle_type_T-{i}' for i in range(1, window_size + 1)] + \
+                   [f'rsi_T-{i}' for i in range(1, window_size + 1)] + \
+                   [f'Price_Range_T-{i}' for i in range(1, window_size + 1)] + \
+                   [f'rsi_crossover_slow_T-{i}' for i in range(1, window_size + 1)] + \
+                   [f'rsi_crossover_fast_T-{i}' for i in range(1, window_size + 1)] + \
+                   [f'fast_harmonic_mean_T-{i}' for i in range(1, window_size + 1)]
+
+
     day_data['pips_change'] = np.subtract(day_data['Close'].to_numpy(), day_data['Close'].shift(1).to_numpy())
 
-    
-    
     if 'JPY' in symbol:
         pips_change = day_data['pips_change'] * 10 ** 2
-
-    elif 'NDX' in symbol or 'US30' : pips_change = day_data['pips_change'] * 10 ** 2
-
 
     else:
         pips_change = day_data['pips_change'] * 10 ** 4
