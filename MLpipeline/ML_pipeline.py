@@ -130,7 +130,7 @@ class twelve_data_ohlc(  ) :
     # Main function to manage threading
     def save_ohlc(self, tf="1day", daylength=95):
 
-        td = TDClient(apikey="")
+        td = TDClient(apikey="7b703cf383494124b3370ad71a65f796")
         start_date, end_date = self.get_start_end_date()
 
         # daylength = 95
@@ -199,6 +199,7 @@ class ohlc_transformations(twelve_data_ohlc):
     def make_hour_4_ohlc(self):
 
         hour_4_lag_by = self.lag_info["model"]["v2"]["hour_4_lag"]
+        metals = ['XAUUSD', 'XAGUSD']
         currency_ohlc = []
         count = 0
 
@@ -209,9 +210,11 @@ class ohlc_transformations(twelve_data_ohlc):
             reindexed_h4 = self.add_latest_index_into_ohcl(data_h4)
             reindexed_h4_day = combine_ohlc_into_single_day_hour_4(reindexed_h4)
 
-            reshaped_lagged_h4 = add_ohlc_in_lagged_hour_4(reindexed_h4_day, lag_by=3)
+            if pair in metals: lag_by = 5
+            else: lag_by = 3
+            reshaped_lagged_h4 = add_ohlc_in_lagged_hour_4(reindexed_h4_day, lag_by=lag_by)
 
-            features_h4 = add_features_hour_4(reshaped_lagged_h4, lag_by=3)
+            features_h4 = add_features_hour_4(reshaped_lagged_h4, lag_by=lag_by)
             currency_df = {"hour4_features": features_h4, "symbol": f"{pair}"}
             currency_ohlc.append(currency_df)
             count += 1
@@ -377,7 +380,28 @@ class ohlc_models (ohlc_transformations) :
 
 
 
-   
+    # def save_hour_4_ohlc(self):
+    #
+    #     td = TDClient(apikey="7b703cf383494124b3370ad71a65f796")
+    #     start_date, end_date = self.get_start_end_date()
+    #
+    #     daylength = 95
+    #     tf = "4h"
+    #     outputsize = daylength * 6
+    #
+    #     batch_size = 8  # limit of requests api can make  # Number of threads to run simultaneously
+    #
+    #     output_size = daylength
+    #     for i in range(0, len(self.forex_pairs), batch_size):
+    #         # Create a batch of threads
+    #         # threads = []
+    #         for symbol in self.forex_pairs[i:i + batch_size]:
+    #             process_forex_pair(symbol, tf, start_date, end_date, output_size, td)
+    #
+    #         # Wait for 60 seconds before moving on to the next batch
+    #         print("Waiting for 60 seconds before processing the next batch...")
+    #         time.sleep(60)
+
 class access_resources(ohlc_models):
         pass
 
@@ -422,18 +446,3 @@ class mlpipeline(access_resources):
 
 
 mlpipeline.return_fx_prediction_status()
-
-"""
-output prediction status on 23 September 
-
-{"date": "2024-09-23", "symbol": {"AUDCAD": {"action": "sell"}, "AUDCHF": {"action": "sell"},
-"AUDJPY": {"action": "buy"}, "AUDNZD": {"action": "buy"}, "AUDUSD": {"action": "sell"},
-"CADCHF": {"action": "sell"}, "CADJPY": {"action": "buy"}, "CHFJPY": {"action": "sell"},
-"EURAUD": {"action": "buy"}, "EURCAD": {"action": "sell"}, "EURCHF": {"action": "sell"},
-"EURGBP": {"action": "sell"}, "EURJPY": {"action": "buy"}, "EURNZD": {"action": "buy"},
-"EURUSD": {"action": "sell"}, "GBPAUD": {"action": "sell"}, "GBPCAD": {"action": "buy"},
-"GBPCHF": {"action": "sell"}, "GBPJPY": {"action": "sell"}, "GBPUSD": {"action": "sell"},
-"GBPNZD": {"action": "buy"}, "NZDCAD": {"action": "buy"}, "NZDCHF": {"action": "sell"},
-"NZDJPY": {"action": "buy"}, "NZDUSD": {"action": "sell"}, "USDCHF": {"action": "buy"},
-"USDCAD": {"action": "buy"}, "USDJPY": {"action": "sell"}}}
-"""
