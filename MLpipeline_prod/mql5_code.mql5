@@ -1,1 +1,147 @@
 https://huggingface.co/chat/conversation/6733928fd76110d37aa64883
+
+#include <stdlib.mqh>
+#include <stdlib\json.mqh>  // Include the JSON library to parse the file
+#include <Trade\Trade.mqh>
+
+input string filePath = "C:\\marketframe_ml\\trade_invoke.json";  // Path to the file
+datetime tradeStartTime;
+CTrade trade;
+bool tradeExecuted = false;
+
+// Function to read the file content
+string ReadFile(string path) {
+   string content;
+   int file_handle = FileOpen(path, FILE_READ|FILE_TXT);
+   
+   if (file_handle != INVALID_HANDLE) {
+      while (!FileIsEnding(file_handle)) {
+         content += FileReadString(file_handle) + "\n";
+      }
+      FileClose(file_handle);
+   } else {
+      Print("Failed to open file: ", path);
+   }
+   
+   return content;
+}
+
+// Function to execute trade based on action and symbol
+void ExecuteTrade(string symbol, string action) {
+   double lot_size = 0.1;  // Example lot size
+   if (SymbolSelect(symbol, true)) {
+      if (action == "buy") {
+         trade.Buy(lot_size, symbol);
+         Print("Executed Buy on ", symbol);
+      } else if (action == "sell") {
+         trade.Sell(lot_size, symbol);
+         Print("Executed Sell on ", symbol);
+      }
+   } else {
+      Print("Symbol not found: ", symbol);
+   }
+}
+
+// Function to close all trades after the specified duration
+void CloseAllTrades() {
+   for (int i = OrdersTotal() - 1; i >= 0; i--) {
+      if (OrderSelect(i, SELECT_BY_POS)) {
+         if (OrderType() == OP_BUY || OrderType() == OP_SELL) {
+            trade.PositionClose(OrderSymbol());
+            Print("Closed trade on ", OrderSymbol());
+         }
+      }
+   }
+}
+
+// Main function to monitor time and close trades
+void ManageTradesTimeCheck() {
+   datetime currentTime = TimeCurrent();
+   
+   if (currentTime - tradeStartTime > 17 * 3600 + 30 * 60) {  // 17 hours and 30 minutes in seconds
+      Print("Closing trades after 17 hours and 30 minutes.");
+      CloseAllTrades();
+      EventKillTimer();  // Remove the timer after closing trades
+   }
+}
+
+// The main entry point of the script
+void OnStart() {
+   // Read and parse the JSON file
+   string jsonContent = ReadFile(filePath);
+   
+   if (jsonContent == "") {
+      Print("No data found in the file!");
+      return;
+   }
+   
+   // Parse the JSON
+   MqlJsonValue root;
+   if (!root.Parse(jsonContent)) {
+      Print("Failed to parse JSON data!");
+      return;
+   }
+   
+   // Get the JSON object
+   MqlJsonObject jsonObj;
+   root.ToObject(jsonObj);
+   
+   // Extract date from JSON
+   string jsonDate = jsonObj["date"].ToString();
+   datetime jsonDateTime = StringToTime(jsonDate);
+   
+   if (jsonDateTime == INVALID_DATETIME) {
+      Print("Invalid date format in JSON!");
+      return;
+   }
+   
+   // Check if today's date matches the JSON date
+   datetime todayDate = TimeCurrent() - TimeCurrent() % 86400;  // Strip time part
+   if (todayDate != jsonDateTime) {
+      Print("Today's date does not match the JSON date!");
+      return;
+   }
+   
+   // Check if trades have already been executed
+   if (tradeExecuted) {
+      Print("Trades have already been executed today!");
+      return;
+   }
+   
+   // Extract symbols and actions
+   MqlJsonObject symbolDict;
+   if (jsonObj["symbols"].ToObject(symbolDict)) {
+      // Loop through symbols and execute trades
+      for (int i = 0; i < symbolDict.Total(); i++) {
+         string symbol = symbolDict.GetKey(i);
+         MqlJsonObject actionObj;
+         
+         if (symbolDict[symbol].ToObject(actionObj)) {
+            string action = actionObj["action"].ToString();
+            ExecuteTrade(symbol, action);
+         }
+      }
+   } else {
+      Print("No symbols found in JSON!");
+      return;
+   }
+   
+   // Set trade_executed flag to true
+   tradeExecuted = true;
+   
+   // Record the time when trades are executed
+   tradeStartTime = TimeCurrent();
+   
+   // Set a timer for the time check
+   EventSetTimer(60);  // Set a timer to check every 60 seconds
+}
+
+// Function that gets called at timer intervals
+void OnTimer() {
+   ManageTradesTimeCheck();  // Call the time-checking function
+}
+
+// Clean up resources when the script is stopped
+void OnDeinit(const int reason) {
+   EventKillTimer();  // Remove the timer when script stops
+}
