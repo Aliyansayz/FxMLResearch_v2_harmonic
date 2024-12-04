@@ -1,4 +1,5 @@
-graph TD
+```
+    graph TD
     A[Start Script] --> B[Read and Parse JSON File]
     B --> |JSON Parsed Successfully| C[Check Today's Date with JSON Date]
     B --> |JSON Parsing Failed| Z[Exit Script]
@@ -38,3 +39,5 @@ graph TD
     G --> G1
     G1 --> G2
     end
+
+```
