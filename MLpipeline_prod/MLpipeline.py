@@ -208,6 +208,7 @@ class ohlc_transformations(twelve_data_ohlc):
             # daily_path = f'currency_data/{pair[:6]}_Daily.csv'
             hour4_path = f'currency_data/{pair}_H4.csv'
             data_h4 = return_h4_df(hour4_path)
+            data_h4 = data_h4.sort_index(ascending=True)
             reindexed_h4 = self.add_latest_index_into_ohcl(data_h4)
             reindexed_h4_day = combine_ohlc_into_single_day_hour_4(reindexed_h4)
 
