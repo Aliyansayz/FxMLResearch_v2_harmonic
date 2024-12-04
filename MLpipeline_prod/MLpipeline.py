@@ -175,6 +175,7 @@ class ohlc_transformations(twelve_data_ohlc):
         for pair in self.forex_pairs:
             daily_path = f'currency_data/{pair}_Daily.csv'
             df = return_df_day(daily_path)
+            df = df.sort_index(ascending=True)
             df = self.add_latest_index_into_ohcl(df)
 
             df = add_features_day(df)
