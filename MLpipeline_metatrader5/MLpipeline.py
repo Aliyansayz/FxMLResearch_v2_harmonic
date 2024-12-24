@@ -54,11 +54,6 @@ class twelve_data_ohlc():
         # Get the date 95 days ago
         previous_date = today - timedelta(days=daylength)  # 95
 
-        # Get the date 1 day ago
-        # yesterday = today - timedelta(days=1)
-        # # Format the date
-        # yesterday_str = yesterday.strftime('%Y-%m-%d')
-
         # Format the dates
         today_str = today.strftime('%Y-%m-%d')
         previous_date_str = previous_date.strftime('%Y-%m-%d')
@@ -111,13 +106,6 @@ class twelve_data_ohlc():
            if date_status == True : return
         """
 
-        # ts = td.time_series(
-        #     symbol=symbol_,  # "EUR/USD", # symbol_
-        #     interval=tf,  # "4h", # tf
-        #     start_date=f"{start_date}",
-        #     end_date=f"{end_date}",
-        #     outputsize= output_size )  # 450 ) # approximate length for
-
         # Returns pandas.DataFrame
 
         # folder_path = "currency_data"
@@ -126,21 +114,7 @@ class twelve_data_ohlc():
         time.sleep(0.5)
         print(f"Completed processing {symbol}")
 
-        # print(folder_path)
-        # if not os.path.exists(folder_path):
-        #     os.makedirs(folder_path)
-        # filename = f"{symbol}.csv"
-        #
-        # if tf == "1day":
-        #     filename = f"{symbol}_Daily.csv"
-        #
-        # elif tf == "4h":
-        #     filename = f"{symbol}_H4.csv"
-        #
-        # file_path = os.path.join(folder_path, filename)
-        # df.to_csv(f"{file_path}")
-        # Simulate some work with a sleep (replace with actual processing logic)
-
+       
 
     def append_new_data(self, csv_file_path, new_data_df):
 
@@ -588,28 +562,7 @@ class ohlc_models(ohlc_transformations):
         with open(f'{_path}', 'w') as file:
             json.dump(fx_status_info, file)
         pass
-    # def save_hour_4_ohlc(self):
-    #
-    #     td = TDClient(apikey="7b703cf383494124b3370ad71a65f796")
-    #     start_date, end_date = self.get_start_end_date()
-    #
-    #     daylength = 95
-    #     tf = "4h"
-    #     outputsize = daylength * 6
-    #
-    #     batch_size = 8  # limit of requests api can make  # Number of threads to run simultaneously
-    #
-    #     output_size = daylength
-    #     for i in range(0, len(self.forex_pairs), batch_size):
-    #         # Create a batch of threads
-    #         # threads = []
-    #         for symbol in self.forex_pairs[i:i + batch_size]:
-    #             process_forex_pair(symbol, tf, start_date, end_date, output_size, td)
-    #
-    #         # Wait for 60 seconds before moving on to the next batch
-    #         print("Waiting for 60 seconds before processing the next batch...")
-    #         time.sleep(60)
-
+   
 
 class access_resources(ohlc_models):
     pass
